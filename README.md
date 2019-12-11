@@ -5,3 +5,6 @@ POST /:id
 
 GET /status/:id
     Pega status atual do pagamento
+
+POST /antifraud/:id
+    Retorno do serviço de antifraude para validação do cartão de credito
