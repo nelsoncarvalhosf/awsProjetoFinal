@@ -6,12 +6,12 @@ https://app.swaggerhub.com/apis-docs/Diogo-Perdigao/api-pagamentos/1.0.0
 
 # Resumo
 ## API Pagamentos
-versão: 1.0.0
-Base URL: payment.aws.com/v2
-Este é um exemplo de serviço de validação de pagamentos
+- versão: 1.0.0
+- Base URL: payment.aws.com/v2
+- Este é um exemplo de serviço de validação de pagamentos
 
-Licença: ISC
-Schemes: https
+- Licença: ISC
+- Schemes: https
 
 ### payment URL's de acesso interno
 | Metodo | Caminho       | Resumo                        |
@@ -29,7 +29,23 @@ Schemes: https
 ## Grupo
 - Brandon Anderson
 - Diogo Perdigão
-- Fred Americano
-- Isabella
+- Frederico Americano
+- Isabella Isaac
 - Lucas Porto
 - Nelson Carvalho
+
+![Alt text](apresentacao/billiet.jpg)
+![Alt text](apresentacao/billiet_response.jpg)
+
+![Alt text](apresentacao/buy_post.jpg)
+![Alt text](apresentacao/buy_post_response.jpg)
+
+![Alt text](apresentacao/buy.jpg)
+![Alt text](apresentacao/buy_response.jpg)
+
+
+![Alt text](apresentacao/validation-antifraud.jpg)
+![Alt text](apresentacao/validation-antifraud_response.jpg)
+
+![Alt text](apresentacao/validation-payment.jpg)
+![Alt text](apresentacao/validation-payment_response.jpg)
