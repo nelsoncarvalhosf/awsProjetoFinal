@@ -1,0 +1,344 @@
+---
+swagger: "2.0"
+info:
+  description: "Este é um exemplo de serviço de validação de pagamentos"
+  version: "1.0.0"
+  title: "API Pagamentos"
+  license:
+    name: "ISC"
+host: "virtserver.swaggerhub.com"
+basePath: "/Diogo-Perdigao/API-Pagamentos-Not-Format/1.0.0"
+tags:
+- name: "payment"
+  description: "URL's de acesso interno"
+- name: "validation"
+  description: "URL's de acesso para serviços de terceiros"
+schemes:
+- "https"
+paths:
+  /buy:
+    post:
+      tags:
+      - "payment"
+      summary: "Registrar Pedido"
+      description: "Registra pedido de pagamento iniciando processo de compra"
+      operationId: "setPagamento"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        description: "Token de acesso obtido no endpoint de autenticação"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "buy"
+        required: false
+        schema:
+          $ref: "#/definitions/buy"
+      responses:
+        "201":
+          description: "Ordem criada com sucesso"
+          schema:
+            type: "object"
+        "400":
+          description: "Requisição inválida"
+        "401":
+          description: "Chave de autenticação inválida"
+        "405":
+          description: "Entrada invalida"
+        "408":
+          description: "Tempo esgotado"
+        "429":
+          description: "Pedidos em excesso da mesma fonte"
+        "500":
+          description: "Erro interno do servidor ou serviço"
+        "503":
+          description: "Serviço Indisponivel"
+      security:
+      - apikey_auth:
+        - "write:payment"
+        - "read:payment"
+      x-swagger-router-controller: "Payment"
+  /buy/{id}:
+    get:
+      tags:
+      - "payment"
+      summary: "Retorna o status do pagamento"
+      description: "Identifica o pagamento pelo seu ID"
+      operationId: "getPagamento"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        description: "Token de acesso obtido no endpoint de autenticação"
+        required: true
+        type: "string"
+      - name: "id"
+        in: "path"
+        description: "Identificador da compra"
+        required: true
+        type: "number"
+      responses:
+        "200":
+          description: "Operação realizada com sucesso"
+          schema:
+            type: "object"
+        "401":
+          description: "Autenticação inválida"
+        "404":
+          description: "Não encontrada"
+        "405":
+          description: "Entrada invalida"
+        "408":
+          description: "Tempo esgotado"
+        "429":
+          description: "Pedidos em excesso da mesma fonte"
+        "500":
+          description: "Erro interno do servidor ou serviço"
+        "503":
+          description: "Serviço Indisponivel"
+      security:
+      - apikey_auth:
+        - "write:payment"
+        - "read:payment"
+      x-swagger-router-controller: "Payment"
+  /billet/{id}:
+    get:
+      tags:
+      - "payment"
+      summary: "Gera boleto"
+      description: "Mostra o boleto para pagamento"
+      operationId: "getBillet"
+      produces:
+      - "text/html; charset=utf-8"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Identificador da compra"
+        required: true
+        type: "number"
+      responses:
+        "200":
+          description: "Mostra boleto"
+        "401":
+          description: "Autenticação inválida"
+        "404":
+          description: "Não encontrada"
+        "405":
+          description: "Entrada invalida"
+        "408":
+          description: "Tempo esgotado"
+        "429":
+          description: "Pedidos em excesso da mesma fonte"
+        "500":
+          description: "Erro interno do servidor ou serviço"
+        "503":
+          description: "Serviço Indisponivel"
+      security:
+      - apikey_auth:
+        - "write:payment"
+        - "read:payment"
+      x-swagger-router-controller: "Payment"
+  /validation/antifraud:
+    post:
+      tags:
+      - "validation"
+      summary: "Retorno do antifaude"
+      description: "Retorno do serviço de antifraude para validação de dados do pagamento"
+      operationId: "antifraud"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        description: "Token de acesso obtido no endpoint de autenticação"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "code"
+        required: true
+        schema:
+          $ref: "#/definitions/authorization"
+      responses:
+        "204":
+          description: "Objeto criado com sucesso"
+          schema:
+            type: "object"
+        "400":
+          description: "Requisição inválida"
+        "401":
+          description: "Chave de autenticação inválida"
+        "405":
+          description: "Entrada invalida"
+        "408":
+          description: "Tempo esgotado"
+        "500":
+          description: "Erro interno do servidor ou serviço"
+        "503":
+          description: "Serviço Indisponivel"
+      security:
+      - apikey_auth:
+        - "write:payment"
+        - "read:payment"
+      x-swagger-router-controller: "Validation"
+  /validation/payment:
+    post:
+      tags:
+      - "validation"
+      summary: "Pagamento Aprovado"
+      description: "Recebe do serviço do banco informação que o valor foi pago pelo\
+        \ cartão ou o boleto foi pago"
+      operationId: "complete"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        description: "Token de acesso obtido no endpoint de autenticação"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "code"
+        required: true
+        schema:
+          $ref: "#/definitions/authorization"
+      responses:
+        "204":
+          description: "Objeto criado com sucesso"
+          schema:
+            type: "object"
+        "400":
+          description: "Requisição inválida"
+        "401":
+          description: "Chave de autenticação inválida"
+        "405":
+          description: "Entrada invalida"
+        "408":
+          description: "Tempo esgotado"
+        "500":
+          description: "Erro interno do servidor ou serviço"
+        "503":
+          description: "Serviço Indisponivel"
+      security:
+      - apikey_auth:
+        - "write:payment"
+        - "read:payment"
+      x-swagger-router-controller: "Validation"
+securityDefinitions:
+  apikey_auth:
+    type: "oauth2"
+    authorizationUrl: "https://auth.aws.com/oauth/login"
+    flow: "implicit"
+    scopes:
+      write:payment: "add payment"
+      read:payment: "read payments"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  user:
+    type: "object"
+    required:
+    - "address"
+    - "cep"
+    - "id"
+    - "name"
+    - "taxid"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        description: "Nome Sobrenome do comprador"
+      taxid:
+        type: "number"
+        description: "CPF ou CNPJ somente digitos"
+      address:
+        type: "string"
+        description: "ESstado, Cidade, Rua, numero, Complemento Separados por virgula"
+      cep:
+        type: "number"
+        description: "CEP só numeros"
+  buy:
+    type: "object"
+    required:
+    - "fret"
+    - "info"
+    - "method"
+    - "user"
+    - "value"
+    properties:
+      value:
+        type: "number"
+        description: "Valor da compra"
+      moeda:
+        type: "string"
+      fret:
+        type: "number"
+        description: "Valor do frete"
+      info:
+        type: "string"
+        description: "Informações sobre o pagamento"
+      installments:
+        type: "integer"
+        description: "Quantidade de parcelas do pagamento"
+      cc:
+        type: "integer"
+        description: "4 digitos do cartao de credito para validar antifraude"
+      method:
+        type: "string"
+        description: "Tipo de pagamento, visa, boleto, mastercard, etc"
+        enum:
+        - "credito visa"
+        - "debito visa"
+        - "credito mastercard"
+        - "debito mastercard"
+        - "boleto"
+      user:
+        $ref: "#/definitions/user"
+  status:
+    type: "object"
+    required:
+    - "status"
+    properties:
+      status:
+        type: "string"
+        description: "Retorno do status do pedido"
+        enum:
+        - "aguardando pagamento do boleto"
+        - "aguardando aprovacao do cartao"
+        - "aguardando autorizacao do banco"
+        - "autorizado"
+  payment:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        enum:
+        - "ok"
+        - "produto esgotado"
+  authorization:
+    type: "object"
+    required:
+    - "code"
+    - "id"
+    properties:
+      id:
+        type: "number"
+        description: "Identificador da compra"
+      code:
+        type: "string"
+        description: "Codigo retornado da autorização da compra"
+externalDocs:
+  description: "Veja o MD para mais informações"
+  url: "https://github.com/nelsoncarvalhosf/awsProjetoFinal"

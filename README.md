@@ -2,6 +2,8 @@
 
 Arquivo com o projeto swagger : swegger.yml
 
+https://app.swaggerhub.com/apis-docs/Diogo-Perdigao/api-pagamentos/1.0.0
+
 # Resumo
 ## API Pagamentos
 versão: 1.0.0
@@ -14,7 +16,7 @@ Schemes: https
 ### payment URL's de acesso interno
 | Metodo | Caminho       | Resumo                        |
 | :----: | :------------ | :---------------------------- |
-| POST   | ​/buy​/{method} | Registrar Pedido              |
+| POST   | ​/buy​          | Registrar Pedido              |
 | GET    | ​/buy​/{id}     | Retorna o status do pagamento |
 | GET    | ​/billet​/{id}  | Gera boleto                   |
 
@@ -25,9 +27,9 @@ Schemes: https
 | POST   | ​/validation​/payment​/:id | Pagamento Aprovado   |
 
 ## Grupo
-Brandon Anderson
-Diogo Perdigão
-Fred Americano
-Isabella
-Lucas Porto
-Nelson Carvalho
+- Brandon Anderson
+- Diogo Perdigão
+- Fred Americano
+- Isabella
+- Lucas Porto
+- Nelson Carvalho
