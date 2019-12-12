@@ -1,0 +1,191 @@
+swagger: "2.0"
+info:
+  description: "API criada para fornecer as mais diversas soluções para o mercado de pagamentos (eCommerce, mCommerce)."
+  version: "1.0.0"
+  title: "API Pagamentos"
+  license:
+    name: "ISC"
+host: "pagamento.aws.com"
+basePath: "/v1"
+tags:
+- name: "pagamento"
+  description: "Adiciona e Busca por pagamentos."
+- name: "antifraud"
+  description: "Valida as informações do cartão."
+schemes:
+- "https"
+paths:
+  /pagamento/antifraud:
+    post:
+      tags:
+      - "antifraud"
+      summary: "Retorna o token de validação."
+      description: "Serviço de antifraude para validação de dados do pagamento."
+      operationId: "antifraud"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cartaoNumero"
+        in: "formData"
+        description: "Número do cartão de crédito sem a informação CVV."
+        required: true
+        type: "string"
+      - name: "clienteId"
+        in: "formData"
+        description: "ID do cliente da plataforma."
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Validação realizada com sucesso."
+          schema:
+            type: "string"
+        400:
+          description: "Requisição inválida."
+        401:
+          description: "Autenticação inválida."
+        404:
+          description: "Não encontrada."
+        500:
+          description: "Erro interno do servidor ou serviço."
+      security:
+      - pagamentostore_auth:
+        - "write:pagamentos"
+        - "read:pagamentos"
+  /pagamento:id:
+    get:
+      tags:
+      - "pagamento"
+      summary: "Retorna o pagamento."
+      description: "Identifica o pagamento pelo seu ID."
+      operationId: "getPagamento"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Operação realizada com sucesso"
+          schema:
+            type: "object"
+            items:
+              $ref: "#/definitions/Pagamento"
+        401:
+          description: "Autenticação inválida."
+        404:
+          description: "Não encontrada."
+        500:
+          description: "Erro interno do servidor ou serviço."
+      security:
+      - pagamentostore_auth:
+        - "write:pagamentos"
+        - "read:pagamentos"
+    post:
+      tags:
+      - "pagamento"
+      summary: "Adiciona pagamento a compra"
+      description: "Realiza o pagamento através de cartão de crédito"
+      operationId: "addPagamentoCredito"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "antifraud"
+        in: "header"
+        description: "Token com a validação da forma de pagamento."
+        required: true
+        type: "string"
+      - name: "pagamento"
+        in: "body"
+        description: "Informações sobre o pagamento."
+        required: true
+        schema:
+          $ref: "#/definitions/Pagamento"
+      responses:
+        200:
+          description: "Pagamento realizado com sucesso."
+          schema:
+            type: "object"
+            items:
+              $ref: "#/definitions/Pagamento"
+        400:
+          description: "Requisição inválida."
+        401:
+          description: "Autenticação inválida."
+        402:
+          description: "Requisição válida, mas pagamento inválido."
+        404:
+          description: "Não encontrado."
+        500:
+          description: "Erro interno do servidor ou serviço."
+      security:
+      - pagamentostore_auth:
+        - "write:pagamentos"
+        - "read:pagamentos"
+securityDefinitions:
+  pagamentostore_auth:
+    type: "oauth2"
+    authorizationUrl: "https://pagamento.aws.com/oauth"
+    flow: "implicit"
+    scopes:
+      write:pagamentos: "Persiste o pagamento"
+      read:pagamentos: "Ler o pagamento"
+definitions:
+  Pagamento:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      usuario:
+        $ref: "#/definitions/Usuario"
+      moeda:
+        type: "string"
+      valor:
+        type: "string"
+      frete:
+        type: "string"
+      parcelas:
+        type: "integer"
+        format: "int64"
+      tipo:
+        type: "string"
+        description: "Tipo"
+        enum:
+        - "credito"
+        - "debito"
+        - "boleto"
+      status:
+        type: "string"
+        description: "Status"
+        enum:
+        - "aguardando"
+        - "pago"
+        - "recusado"
+        - "cancelado"
+    required:
+      - usuario
+      - moeda
+      - valor
+      - frete
+      - tipo
+  Usuario:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      cpf:
+        type: "string"
+      nome:
+        type: "string"
+      endereco:
+        type: "string"
+    required:
+      - cpf
+      - nome
+externalDocs:
+  description: "API Pagamentos"
+  url: "https://github.com/nelsoncarvalhosf/awsProjetoFinal"
