@@ -34,6 +34,8 @@ https://app.swaggerhub.com/apis-docs/Diogo-Perdigao/api-pagamentos/1.0.0
 - Lucas Porto
 - Nelson Carvalho
 
+![Alt text](apresentacao/fluxo.jpg)
+
 ![Alt text](apresentacao/billiet.jpg)
 ![Alt text](apresentacao/billiet_response.jpg)
 
